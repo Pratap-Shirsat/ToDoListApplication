@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "f3b13a21-bf26-41df-aa6b-822b21eda54e",
+		"name": "ToDo List APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "32087734"
+	},
+	"item": [
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Add new category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryName\":\"Daily Tasks\",\r\n    \"desc\":\"Tasks which are done on daily routine basis\",\r\n    \"colorHexCode\":\"#FFFF00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/category"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5000/category"
+					},
+					"response": []
+				},
+				{
+					"name": "find category by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5000/category/65e870374c4995767afff09c"
+					},
+					"response": []
+				},
+				{
+					"name": "delete category by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:5000/category/65e889055c19bba7c720333f"
+					},
+					"response": []
+				},
+				{
+					"name": "Update category by Id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Daily Tasks\",\r\n    \"desc\":\"Tasks which are done on daily routine basis\",\r\n    \"colorHexCode\":\"#FFFF00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/category/65e870374c4995767afff09c"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task",
+			"item": [
+				{
+					"name": "Get all tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5000/task"
+					},
+					"response": []
+				},
+				{
+					"name": "filter tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/task/filter?searchString=goa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"task",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "taskStatus",
+									"value": "InProgress",
+									"disabled": true
+								},
+								{
+									"key": "onDate",
+									"value": "2024-1-13",
+									"disabled": true
+								},
+								{
+									"key": "beforeDate",
+									"value": "2024-03-15",
+									"disabled": true
+								},
+								{
+									"key": "afterDate",
+									"value": "2024-03-10",
+									"disabled": true
+								},
+								{
+									"key": "categoryId",
+									"value": "65e870584c4995767afff09e",
+									"disabled": true
+								},
+								{
+									"key": "searchString",
+									"value": "goa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find task by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5000/task/65e9857a45fd00c601c8f26e"
+					},
+					"response": []
+				},
+				{
+					"name": "delete task by Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:5000/task/65e982cede0e7b098d11a8fa"
+					},
+					"response": []
+				},
+				{
+					"name": "Add new Task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"taskInfo\":\"Water the plants at side\",\r\n    \"categoryId\":\"65e9827dde0e7b098d11a8f3\",\r\n    \"dueDate\":\"2024-3-8\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/task"
+					},
+					"response": []
+				},
+				{
+					"name": "Add new Task  with all fields",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"taskInfo\":\"Need to attend wedding at old Goa. Need to attend wedding of Kiran at old goa on 13th March 11AM at old Heritage hall.\",\r\n    \"taskStatus\": \"InProgress\",\r\n    \"categoryId\":\"65e9827dde0e7b098d11a8f3\",\r\n    \"dueDate\":\"2024-03-13T10:15:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/task"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task  details",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"taskInfo\":\"Need to attend wedding at old Goa,Need to attend wedding of Kiran at old goa on 13th March 11AM at old Heritage hall.\",\r\n    \"taskStatus\": \"InProgress\",\r\n    \"categoryId\":\"65e9827dde0e7b098d11a8f3\",\r\n    \"dueDate\": \"Thu, 07 Mar 2024 11:59:39 GMT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/task/65e9a52c03d4e1b8c70921ec"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task Progress",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"taskInfo\":\"some task info as it is\",\r\n    \"categoryId\":\"65e9827dde0e7b098d11a8f3\",\r\n    \"taskStatus\": \"Completed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/task/65e9857a45fd00c601c8f26e"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

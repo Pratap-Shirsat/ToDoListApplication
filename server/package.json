@@ -1,0 +1,23 @@
+{
+  "name": "todolistnodejs",
+  "version": "1.0.0",
+  "description": "application for enhanced todo list, created during SJ Innovation test.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "keywords": [
+    "NodeJS",
+    "MongoDB",
+    "JWT"
+  ],
+  "author": "Pratap Shirsat",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "express-validator": "^7.0.1",
+    "mongoose": "^8.2.1"
+  }
+}
