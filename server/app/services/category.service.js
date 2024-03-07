@@ -2,7 +2,8 @@ const categoryModel = require("../models/category.model");
 
 const insertCategory = async (category) => await categoryModel.create(category);
 
-const getAllCategories = async () => categoryModel.find().exec();
+const getAllCategoriesOfUser = async (userId) =>
+  categoryModel.find({ byUser: userId }).exec();
 
 const findCategoryById = async (categoryId) =>
   categoryModel.findById(categoryId).exec();
@@ -15,7 +16,7 @@ const removeCategoryById = async (categoryId) =>
 
 module.exports = {
   insertCategory,
-  getAllCategories,
+  getAllCategoriesOfUser,
   findCategoryById,
   updateCategoryById,
   removeCategoryById,

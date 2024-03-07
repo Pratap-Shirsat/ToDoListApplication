@@ -1,8 +1,29 @@
 const taskModel = require("../models/task.model");
+const mongoose = require("mongoose");
 
 const insertTask = async (task) => await taskModel.create(task);
 
-const findAllTasks = async () => taskModel.find().populate("category").exec();
+const findAllTasksOfUser = async (userId) =>
+  taskModel
+    .aggregate([
+      {
+        $lookup: {
+          from: "Category",
+          localField: "category",
+          foreignField: "_id",
+          as: "taskCategory",
+        },
+      },
+      {
+        $unwind: "$taskCategory",
+      },
+      {
+        $match: {
+          "taskCategory.byUser": new mongoose.Types.ObjectId(userId),
+        },
+      },
+    ])
+    .exec();
 
 const fetchTaskById = async (taskId) =>
   taskModel.findById(taskId).populate("category").exec();
@@ -14,26 +35,38 @@ const deleteTaskById = async (taskId) =>
   taskModel.findByIdAndDelete(taskId).exec();
 
 const filterTaskByCategoryId = async (categoryId) =>
-  taskModel.find({ category: categoryId }).exec();
+  taskModel.find({ category: categoryId }).populate("category").exec();
 
 const filterTaskBySearchString = async (searchString) =>
-  taskModel.find({ taskInfo: { $regex: searchString, $options: "i" } }).exec();
+  taskModel
+    .find({ taskInfo: { $regex: searchString, $options: "i" } })
+    .populate("category")
+    .exec();
 
 const filterTasksBeforeDate = async (beforeDate) =>
-  taskModel.find({ dueDate: { $lt: beforeDate } }).exec();
+  taskModel
+    .find({ dueDate: { $lt: beforeDate } })
+    .populate("category")
+    .exec();
 
 const filterTasksAfterDate = async (afterDate) =>
-  taskModel.find({ dueDate: { $gt: afterDate } }).exec();
+  taskModel
+    .find({ dueDate: { $gt: afterDate } })
+    .populate("category")
+    .exec();
 
 const filterTasksOnDate = async (onDate) => {
   const startDate = new Date(onDate).setHours(0, 0, 0, 0);
   const endDate = new Date(onDate).setHours(23, 59, 59, 999);
 
-  return taskModel.find({ dueDate: { $gt: startDate, $lt: endDate } }).exec();
+  return taskModel
+    .find({ dueDate: { $gt: startDate, $lt: endDate } })
+    .populate("category")
+    .exec();
 };
 
 const filterTasksByStatus = async (status) =>
-  taskModel.find({ taskStatus: status }).exec();
+  taskModel.find({ taskStatus: status }).populate("category").exec();
 
 const fetchFilteredTasks = async (filter) => {
   if (filter.beforeDate) {
@@ -49,13 +82,13 @@ const fetchFilteredTasks = async (filter) => {
   } else if (filter.taskStatus) {
     return filterTasksByStatus(filter.taskStatus);
   } else {
-    return findAllTasks();
+    return [];
   }
 };
 
 module.exports = {
   insertTask,
-  findAllTasks,
+  findAllTasksOfUser,
   fetchTaskById,
   updateTaskById,
   deleteTaskById,

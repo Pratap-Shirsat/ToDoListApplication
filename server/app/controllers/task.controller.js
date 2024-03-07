@@ -2,7 +2,7 @@ const { validationResult } = require("express-validator");
 const { formResponse } = require("../helpers/responseHelper");
 const {
   insertTask,
-  findAllTasks,
+  findAllTasksOfUser,
   fetchTaskById,
   updateTaskById,
   deleteTaskById,
@@ -51,8 +51,9 @@ const addTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
   try {
-    const tasksRes = await findAllTasks();
-    return res.status(200).send(formResponse(tasksRes));
+    // need change here
+    const tasksRes = await findAllTasksOfUser(req.query.userId);
+    return res.status(200).send(formResponse(generateTaskResponse(tasksRes)));
   } catch (error) {
     console.log(error);
     return res
@@ -74,7 +75,11 @@ const findTaskById = async (req, res) => {
         .send(
           formResponse(null, `Task with id ${req.params.taskId} not found!`)
         );
-    return res.status(200).send(formResponse(taskRes));
+    let taskList = [];
+    taskList.push(taskRes);
+    return res
+      .status(200)
+      .send(formResponse(generateTaskResponse(taskList)[0]));
   } catch (error) {
     console.log(error);
     return res
@@ -177,13 +182,32 @@ const getFilteredTasks = async (req, res) => {
     }
 
     const taskRes = await fetchFilteredTasks(filterObj);
-    return res.status(200).send(formResponse(taskRes));
+    return res.status(200).send(formResponse(generateTaskResponse(taskRes)));
   } catch (error) {
     console.log(error);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
   }
+};
+
+const generateTaskResponse = (tasks) => {
+  const taskList = [];
+  tasks.forEach((r) =>
+    taskList.push({
+      taskId: r._id,
+      taskInfo: r.taskInfo,
+      dueDate: r.dueDate,
+      taskStatus: r.taskStatus,
+      categoryInfo: {
+        categoryId: r.category._id,
+        categoryName: r.category.categoryName ?? r.taskCategory.categoryName,
+        colorHexCode: r.category.colorHexCode ?? r.taskCategory.colorHexCode,
+        desc: r.category.desc ?? r.taskCategory.desc,
+      },
+    })
+  );
+  return taskList;
 };
 
 module.exports = {

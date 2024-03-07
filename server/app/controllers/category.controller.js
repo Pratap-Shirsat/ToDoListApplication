@@ -2,7 +2,7 @@ const { validationResult } = require("express-validator");
 const { formResponse } = require("../helpers/responseHelper");
 const {
   insertCategory,
-  getAllCategories,
+  getAllCategoriesOfUser,
   updateCategoryById,
   findCategoryById,
   removeCategoryById,
@@ -14,6 +14,7 @@ const addCategory = async (req, res) => {
     if (!validatedReq.isEmpty())
       return res.status(400).send(formResponse(null, validatedReq.array()));
 
+    req.body.byUser = req.query.userId; // need  to make changes here
     const serviceRes = await insertCategory(req.body);
     return res
       .status(201)
@@ -28,8 +29,8 @@ const addCategory = async (req, res) => {
 
 const getCategories = async (req, res) => {
   try {
-    const categoryRes = await getAllCategories();
-    return res.status(200).send(formResponse(categoryRes));
+    const categoryRes = await getAllCategoriesOfUser(req.query.userId); // need to make change here
+    return res.status(200).send(formResponse(formCategoryResponse(categoryRes)));
   } catch (error) {
     console.log(error);
     return res.status(500).send(formResponse(null, "Internal error occured"));
@@ -82,7 +83,11 @@ const fetchCategoryById = async (req, res) => {
             `Category with id ${req.params.categoryId} not found.`
           )
         );
-    return res.status(200).send(formResponse(categoryRes));
+    const categoryList = [];
+    categoryList.push(categoryRes);
+    return res
+      .status(200)
+      .send(formResponse(formCategoryResponse(categoryList)[0]));
   } catch (error) {
     console.log(error);
     return res
@@ -122,6 +127,19 @@ const deleteCategoryById = async (req, res) => {
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
   }
+};
+
+const formCategoryResponse = (categories) => {
+  const categoryList = [];
+  categories.forEach((r) =>
+    categoryList.push({
+      categoryId: r._id,
+      categoryName: r.categoryName,
+      colorHexCode: r.colorHexCode,
+      desc: r.desc,
+    })
+  );
+  return categoryList;
 };
 
 module.exports = {
