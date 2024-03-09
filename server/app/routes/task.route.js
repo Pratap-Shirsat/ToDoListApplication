@@ -3,6 +3,9 @@ const {
   taskDataValidate,
   validateTaskId,
   validateFilterData,
+  taskStatusValidate,
+  categoryValidate,
+  taskUpdateDataValidate,
 } = require("../controllers/validationSchemes/taskValidators");
 const {
   addTask,
@@ -11,17 +14,45 @@ const {
   updateTask,
   removeTask,
   getFilteredTasks,
+  updateTaskStatus,
+  updateTaskCategory,
 } = require("../controllers/task.controller");
+const { authorizeUser } = require("../controllers/middlewares/authMiddleware");
 
 const taskRoutes = () => {
   const taskRouter = express.Router();
 
-  taskRouter.post("/", taskDataValidate, addTask);
-  taskRouter.get("/", getAllTasks);
-  taskRouter.get("/filter", validateFilterData, getFilteredTasks);
-  taskRouter.get("/:taskId", validateTaskId, findTaskById);
-  taskRouter.put("/:taskId", validateTaskId, taskDataValidate, updateTask);
-  taskRouter.delete("/:taskId", validateTaskId, removeTask);
+  taskRouter.post("/", authorizeUser, taskDataValidate, addTask);
+  taskRouter.get("/", authorizeUser, getAllTasks);
+  taskRouter.get(
+    "/filter",
+    authorizeUser,
+    validateFilterData,
+    getFilteredTasks
+  );
+  taskRouter.get("/:taskId", authorizeUser, validateTaskId, findTaskById);
+  taskRouter.put(
+    "/status/:taskId",
+    authorizeUser,
+    validateTaskId,
+    taskStatusValidate,
+    updateTaskStatus
+  );
+  taskRouter.put(
+    "/category/:taskId",
+    authorizeUser,
+    validateTaskId,
+    categoryValidate,
+    updateTaskCategory
+  );
+  taskRouter.put(
+    "/:taskId",
+    authorizeUser,
+    validateTaskId,
+    taskUpdateDataValidate,
+    updateTask
+  );
+  taskRouter.delete("/:taskId", authorizeUser, validateTaskId, removeTask);
 
   return taskRouter;
 };

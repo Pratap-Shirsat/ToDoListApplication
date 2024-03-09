@@ -7,7 +7,8 @@ const fetchUserById = async (userId) => userModel.findById(userId).exec();
 const updateUser = async (userId, userData) =>
   userModel.findByIdAndUpdate(userId, userData).exec();
 
-const deleteUserById = async (userId) => userModel.findByIdAndDelete(userId).exec();
+const deleteUserById = async (userId) =>
+  userModel.deleteOne({ _id: userId }).exec();
 
 const findUserByEmail = async (email) => userModel.findOne({ email }).exec();
 

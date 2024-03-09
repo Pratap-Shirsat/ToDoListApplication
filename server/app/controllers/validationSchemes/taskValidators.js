@@ -14,7 +14,6 @@ const taskDataValidate = [
     .trim()
     .isLength({ min: 1, max: 800 })
     .withMessage("Task information should be of length 1 to 800 characters."),
-  body("taskStatus").optional().custom(validateTaskStatus),
   body("dueDate").optional().toDate(),
   body("categoryId").isMongoId().withMessage("Category Id is Invalid!"),
 ];
@@ -37,8 +36,25 @@ const validateFilterData = [
   query("afterDate").optional().toDate(),
 ];
 
+const taskStatusValidate = body("taskStatus").custom(validateTaskStatus);
+
+const categoryValidate = body("categoryId")
+  .isMongoId()
+  .withMessage("Invalid categoryId");
+
+const taskUpdateDataValidate = [
+  body("taskInfo")
+    .trim()
+    .isLength({ min: 1, max: 800 })
+    .withMessage("Task information should be of length 1 to 800 characters."),
+  body("dueDate").toDate(),
+];
+
 module.exports = {
   taskDataValidate,
   validateTaskId,
   validateFilterData,
+  taskStatusValidate,
+  categoryValidate,
+  taskUpdateDataValidate,
 };

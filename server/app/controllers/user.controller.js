@@ -7,6 +7,11 @@ const {
 const { formResponse } = require("../helpers/responseHelper");
 const { validationResult } = require("express-validator");
 const { genSalt, hash } = require("bcrypt");
+const {
+  getAllCategoriesOfUser,
+  deleteCategoriesOfUser,
+} = require("../services/category.service");
+const { deleteUserTasks } = require("../services/task.service");
 
 const registerUser = async (req, res) => {
   try {
@@ -40,8 +45,7 @@ const registerUser = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
   try {
-    // to be done after authentication and authorization is implemented
-    const user = await fetchUserById("userId");
+    const user = await fetchUserById(req.user.userId);
     if (user === null)
       return res.status(404).send(formResponse(null, "User does not exists."));
     const userDetails = {
@@ -65,6 +69,10 @@ const updateUserData = async (req, res) => {
     if (!validatedReq.isEmpty())
       return res.status(400).send(formResponse(null, validatedReq.array()));
 
+    const user = await fetchUserById(req.user.userId);
+    if (user === null)
+      return res.status(404).send(formResponse(null, "User does not exists."));
+
     const userData = {};
     if (req.body.name) {
       userData.name = req.body.name;
@@ -75,7 +83,7 @@ const updateUserData = async (req, res) => {
     if (req.body.username) {
       userData.username = req.body.username;
     }
-    await updateUser("userId", userData);
+    await updateUser(req.user.userId, userData);
     return res
       .status(200)
       .send(formResponse("Updated user details successfully."));
@@ -103,10 +111,14 @@ const resetPassword = async (req, res) => {
     if (!validatedReq.isEmpty())
       return res.status(400).send(formResponse(null, validatedReq.array()));
 
+    const user = await fetchUserById(req.user.userId);
+    if (user === null)
+      return res.status(404).send(formResponse(null, "User does not exists."));
+
     const salt = await genSalt(10);
     const hashedPassword = hash(req.body.password, salt);
 
-    await updateUser("userId", { hashedPassword });
+    await updateUser(req.user.userId, { hashedPassword });
     return res
       .status(200)
       .send(formResponse("Password has been reset successfully"));
@@ -120,10 +132,16 @@ const resetPassword = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const user = await deleteUserById("userId");
-    if (user === null) {
-      return res.status(404).send(formResponse(null, "User does not exists!"));
-    }
+    const { userId } = req.user;
+    const user = await fetchUserById(userId);
+    if (user === null)
+      return res.status(404).send(formResponse(null, "User does not exists."));
+
+    const categories = await getAllCategoriesOfUser(userId);
+    const categoryIds = categories.map((category) => category._id);
+    await deleteUserTasks(categoryIds);
+    await deleteCategoriesOfUser(userId);
+    await deleteUserById(userId);
     return res
       .status(200)
       .send(formResponse("User has been deleted successfully"));

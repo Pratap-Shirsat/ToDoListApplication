@@ -27,7 +27,10 @@ const addTask = async (req, res) => {
           )
         );
     }
-    req.body.category = req.body.categoryId;
+    const taskData = {
+      category: req.body.categoryId,
+      taskInfo: req.body.taskInfo,
+    };
     if (req.body.dueDate === null) {
       return res.status(400).send(formResponse(null, "Due date is invalid"));
     }
@@ -36,8 +39,10 @@ const addTask = async (req, res) => {
         return res
           .status(400)
           .send(formResponse(null, "Due date should be of future"));
+
+      taskData.dueDate = req.body.dueDate;
     }
-    const serviceRes = await insertTask(req.body);
+    const serviceRes = await insertTask(taskData);
     return res
       .status(201)
       .send(formResponse(`Created task successfully with id ${serviceRes.id}`));
@@ -51,8 +56,7 @@ const addTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
   try {
-    // need change here
-    const tasksRes = await findAllTasksOfUser(req.query.userId);
+    const tasksRes = await findAllTasksOfUser(req.user.userId);
     return res.status(200).send(formResponse(generateTaskResponse(tasksRes)));
   } catch (error) {
     console.log(error);
@@ -93,18 +97,6 @@ const updateTask = async (req, res) => {
     const validatedReq = validationResult(req);
     if (!validatedReq.isEmpty())
       return res.status(400).send(formResponse(null, validatedReq.array()));
-    const category = await findCategoryById(req.body.categoryId);
-    if (category === null) {
-      return res
-        .status(404)
-        .send(
-          formResponse(
-            null,
-            `Category with id ${req.body.categoryId} not found.`
-          )
-        );
-    }
-    req.body.category = req.body.categoryId;
     if (req.body.dueDate === null) {
       return res.status(400).send(formResponse(null, "Due date is invalid"));
     }
@@ -114,7 +106,10 @@ const updateTask = async (req, res) => {
           .status(400)
           .send(formResponse(null, "Due date should be of future"));
     }
-    const taskRes = await updateTaskById(req.params.taskId, req.body);
+    const taskRes = await updateTaskById(req.params.taskId, {
+      taskInfo: req.body.taskInfo,
+      dueDate: req.body.dueDate,
+    });
     if (taskRes === null)
       return res
         .status(404)
@@ -210,6 +205,64 @@ const generateTaskResponse = (tasks) => {
   return taskList;
 };
 
+const updateTaskStatus = async (req, res) => {
+  try {
+    const validatedReq = validationResult(req);
+    if (!validatedReq.isEmpty())
+      return res.status(400).send(formResponse(null, validatedReq.array()));
+
+    const taskRes = await updateTaskById(req.params.taskId, {
+      taskStatus: req.body.taskStatus,
+    });
+
+    if (taskRes === null)
+      return res
+        .status(404)
+        .send(
+          formResponse(null, `Task with id ${req.params.taskId} not found!`)
+        );
+    return res
+      .status(200)
+      .send(formResponse("Updated task status successfully"));
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .send(formResponse(null, "some internal error occured"));
+  }
+};
+
+const updateTaskCategory = async (req, res) => {
+  try {
+    const validatedReq = validationResult(req);
+    if (!validatedReq.isEmpty())
+      return res.status(400).send(formResponse(null, validatedReq.array()));
+
+    const category = await findCategoryById(req.body.categoryId);
+    if (category === null)
+      return res.status(404).send(formResponse(null, "Category not found!"));
+
+    const taskRes = await updateTaskById(req.params.taskId, {
+      category: req.body.categoryId,
+    });
+
+    if (taskRes === null)
+      return res
+        .status(404)
+        .send(
+          formResponse(null, `Task with id ${req.params.taskId} not found!`)
+        );
+    return res
+      .status(200)
+      .send(formResponse("Updated task status successfully"));
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .send(formResponse(null, "some internal error occured"));
+  }
+};
+
 module.exports = {
   addTask,
   getAllTasks,
@@ -217,4 +270,6 @@ module.exports = {
   updateTask,
   removeTask,
   getFilteredTasks,
+  updateTaskStatus,
+  updateTaskCategory,
 };

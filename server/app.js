@@ -5,6 +5,7 @@ const {
   taskRoutes,
   categoryRoutes,
   userRoutes,
+  authRoutes,
 } = require("./app/routes/index");
 const dbConnection = require("./app/db/db.config");
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) =>
 app.use("/task", taskRoutes);
 app.use("/category", categoryRoutes);
 app.use("/user", userRoutes);
+app.use("/auth", authRoutes);
 app.use(unKnownRoutes);
 
 const nodePort = process.env.NODE_PORT || 4545;

@@ -31,8 +31,18 @@ const validateUpdateData = [
     .withMessage("Username should be of length 5 to 20 characters."),
 ];
 
+const validateLoginData = [
+  body("username")
+    .isLength({ min: 8, max: 15 })
+    .withMessage("Password must be between 8 to 15 characters long only."),
+  body("username")
+    .isLength({ min: 5, max: 20 })
+    .withMessage("Username should be of length 5 to 20 characters."),
+];
+
 module.exports = {
   userDataValidate,
   validatePassword,
   validateUpdateData,
+  validateLoginData,
 };

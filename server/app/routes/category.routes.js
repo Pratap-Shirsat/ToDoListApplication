@@ -2,6 +2,7 @@ const express = require("express");
 const {
   categoryDataValidate,
   categoryIdValidate,
+  categoryUpdateDataValidate,
 } = require("../controllers/validationSchemes/categoryValidator");
 const {
   addCategory,
@@ -10,20 +11,32 @@ const {
   fetchCategoryById,
   deleteCategoryById,
 } = require("../controllers/category.controller");
+const { authorizeUser } = require("../controllers/middlewares/authMiddleware");
 
 const categoryRoutes = () => {
   const categoryRouter = express.Router();
 
-  categoryRouter.post("/", categoryDataValidate, addCategory);
-  categoryRouter.get("/", getCategories);
+  categoryRouter.post("/", authorizeUser, categoryDataValidate, addCategory);
+  categoryRouter.get("/", authorizeUser, getCategories);
   categoryRouter.put(
     "/:categoryId",
-    categoryDataValidate,
+    authorizeUser,
+    categoryUpdateDataValidate,
     categoryIdValidate,
     updateCategory
   );
-  categoryRouter.get("/:categoryId", categoryIdValidate, fetchCategoryById);
-  categoryRouter.delete("/:categoryId", categoryIdValidate, deleteCategoryById);
+  categoryRouter.get(
+    "/:categoryId",
+    authorizeUser,
+    categoryIdValidate,
+    fetchCategoryById
+  );
+  categoryRouter.delete(
+    "/:categoryId",
+    authorizeUser,
+    categoryIdValidate,
+    deleteCategoryById
+  );
 
   return categoryRouter;
 };

@@ -12,11 +12,17 @@
 				{
 					"name": "Add new category",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"categoryName\":\"Daily Tasks\",\r\n    \"desc\":\"Tasks which are done on daily routine basis\",\r\n    \"colorHexCode\":\"#FFFF00\"\r\n}",
+							"raw": "{\r\n    \"categoryName\":\"New Tasks\",\r\n    \"desc\":\"Tasks which are of New Day\",\r\n    \"colorHexCode\":\"#FFFF00\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -30,6 +36,12 @@
 				{
 					"name": "Get all categories",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": "http://localhost:5000/category"
@@ -39,29 +51,32 @@
 				{
 					"name": "find category by Id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:5000/category/65e870374c4995767afff09c"
-					},
-					"response": []
-				},
-				{
-					"name": "delete category by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "http://localhost:5000/category/65e889055c19bba7c720333f"
+						"url": "http://localhost:5000/category/65ec1e4fa2bbdf623c18fd6c"
 					},
 					"response": []
 				},
 				{
 					"name": "Update category by Id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\":\"Daily Tasks\",\r\n    \"desc\":\"Tasks which are done on daily routine basis\",\r\n    \"colorHexCode\":\"#FFFF00\"\r\n}",
+							"raw": "{\r\n    \"categoryName\":\"Daily Tasks\",\r\n    \"desc\":\"Tasks which are done on daily routine basis\",\r\n    \"colorHexCode\":\"#FFFF00\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -71,6 +86,21 @@
 						"url": "http://localhost:5000/category/65e870374c4995767afff09c"
 					},
 					"response": []
+				},
+				{
+					"name": "delete category by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:5000/category/65e889055c19bba7c720333f"
+					},
+					"response": []
 				}
 			]
 		},
@@ -78,8 +108,14 @@
 			"name": "Task",
 			"item": [
 				{
-					"name": "Get all tasks",
+					"name": "Get all tasks of user",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": "http://localhost:5000/task"
@@ -89,10 +125,16 @@
 				{
 					"name": "filter tasks",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/task/filter?searchString=goa",
+							"raw": "http://localhost:5000/task/filter?beforeDate=2024-03-15",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -115,8 +157,7 @@
 								},
 								{
 									"key": "beforeDate",
-									"value": "2024-03-15",
-									"disabled": true
+									"value": "2024-03-15"
 								},
 								{
 									"key": "afterDate",
@@ -125,12 +166,13 @@
 								},
 								{
 									"key": "categoryId",
-									"value": "65e870584c4995767afff09e",
+									"value": "65e9d76b872be9fe6ae025b9",
 									"disabled": true
 								},
 								{
 									"key": "searchString",
-									"value": "goa"
+									"value": "goa",
+									"disabled": true
 								}
 							]
 						}
@@ -140,6 +182,12 @@
 				{
 					"name": "find task by Id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "GET",
 						"header": [],
 						"url": "http://localhost:5000/task/65e9857a45fd00c601c8f26e"
@@ -147,40 +195,19 @@
 					"response": []
 				},
 				{
-					"name": "delete task by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "http://localhost:5000/task/65e982cede0e7b098d11a8fa"
-					},
-					"response": []
-				},
-				{
 					"name": "Add new Task",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"taskInfo\":\"Water the plants at side\",\r\n    \"categoryId\":\"65e9827dde0e7b098d11a8f3\",\r\n    \"dueDate\":\"2024-3-8\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
 							}
 						},
-						"url": "http://localhost:5000/task"
-					},
-					"response": []
-				},
-				{
-					"name": "Add new Task  with all fields",
-					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"taskInfo\":\"Need to attend wedding at old Goa. Need to attend wedding of Kiran at old goa on 13th March 11AM at old Heritage hall.\",\r\n    \"taskStatus\": \"InProgress\",\r\n    \"categoryId\":\"65e9827dde0e7b098d11a8f3\",\r\n    \"dueDate\":\"2024-03-13T10:15:00\"\r\n}",
+							"raw": "{\r\n    \"taskInfo\":\"Wash car and fill up the fuel tank\",\r\n    \"categoryId\":\"65ec1e4fa2bbdf623c18fd6c\"//,\r\n    //\"dueDate\":\"2024-3-8\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -194,36 +221,206 @@
 				{
 					"name": "Update Task  details",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"taskInfo\":\"Need to attend wedding at old Goa,Need to attend wedding of Kiran at old goa on 13th March 11AM at old Heritage hall.\",\r\n    \"taskStatus\": \"InProgress\",\r\n    \"categoryId\":\"65e9827dde0e7b098d11a8f3\",\r\n    \"dueDate\": \"Thu, 07 Mar 2024 11:59:39 GMT\"\r\n}",
+							"raw": "{\r\n    \"taskInfo\":\"Need to attend wedding at old Goa,Need to attend wedding of Kiran at old goa on 13th March 11AM at old Heritage hall.\",\r\n    \"dueDate\": \"Thu, 09 Mar 2024 11:59:39 GMT\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "http://localhost:5000/task/65e9a52c03d4e1b8c70921ec"
+						"url": "http://localhost:5000/task/65ec48350d5ebc1fd3341be3"
 					},
 					"response": []
 				},
 				{
 					"name": "Update Task Progress",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"taskInfo\":\"some task info as it is\",\r\n    \"categoryId\":\"65e9827dde0e7b098d11a8f3\",\r\n    \"taskStatus\": \"Completed\"\r\n}",
+							"raw": "{\r\n    \"taskStatus\": \"Completed\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "http://localhost:5000/task/65e9857a45fd00c601c8f26e"
+						"url": "http://localhost:5000/task/status/65ec48310d5ebc1fd3341be0"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task Category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryId\": \"65ec1e6fa2bbdf623c18fd6e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/task/category/65ec48360d5ebc1fd3341be6"
+					},
+					"response": []
+				},
+				{
+					"name": "delete task by Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:5000/task/65e982cede0e7b098d11a8fa"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Pratap Shirsat\",\r\n    \"email\":\"pratapshirsat1998@gmail.com\",\r\n    \"username\":\"pshirsat\",\r\n    \"password\":\"password12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/user/register"
+					},
+					"response": []
+				},
+				{
+					"name": "get user details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:5000/user"
+					},
+					"response": []
+				},
+				{
+					"name": "update user details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Jimin Park\",\r\n    \"username\":\"jimin\",\r\n    \"email\":\"pratapshirsat9@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwtToken}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:5000/user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "user login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (responseCode.code === 200) {\r",
+									"    var responseBody = JSON.parse(responseBody);\r",
+									"\r",
+									"    if (responseBody.Data && responseBody.Data.token) {\r",
+									"        // Set the global variable jwtToken with the token received in the response\r",
+									"        postman.setGlobalVariable(\"jwtToken\", responseBody.Data.token);\r",
+									"    }\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"pshirsat\",\r\n    \"password\":\"password12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/auth/user/login"
 					},
 					"response": []
 				}

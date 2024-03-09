@@ -86,6 +86,9 @@ const fetchFilteredTasks = async (filter) => {
   }
 };
 
+const deleteUserTasks = async (categoryIds) =>
+  taskModel.deleteMany({ category: { $in: categoryIds } }).exec();
+
 module.exports = {
   insertTask,
   findAllTasksOfUser,
@@ -95,4 +98,5 @@ module.exports = {
   filterTaskByCategoryId,
   filterTaskBySearchString,
   fetchFilteredTasks,
+  deleteUserTasks,
 };

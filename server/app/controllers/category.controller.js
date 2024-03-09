@@ -7,6 +7,7 @@ const {
   findCategoryById,
   removeCategoryById,
 } = require("../services/category.service");
+const { deleteUserTasks } = require("../services/task.service");
 
 const addCategory = async (req, res) => {
   try {
@@ -14,8 +15,15 @@ const addCategory = async (req, res) => {
     if (!validatedReq.isEmpty())
       return res.status(400).send(formResponse(null, validatedReq.array()));
 
-    req.body.byUser = req.query.userId; // need  to make changes here
-    const serviceRes = await insertCategory(req.body);
+    const categoryData = {
+      byUser: req.user.userId,
+      categoryName: req.body.categoryName,
+      desc: req.body.desc,
+    };
+    if (req.body.colorHexCode)
+      categoryData.colorHexCode = req.body.colorHexCode;
+
+    const serviceRes = await insertCategory(categoryData);
     return res
       .status(201)
       .send(
@@ -29,8 +37,10 @@ const addCategory = async (req, res) => {
 
 const getCategories = async (req, res) => {
   try {
-    const categoryRes = await getAllCategoriesOfUser(req.query.userId); // need to make change here
-    return res.status(200).send(formResponse(formCategoryResponse(categoryRes)));
+    const categoryRes = await getAllCategoriesOfUser(req.user.userId);
+    return res
+      .status(200)
+      .send(formResponse(formCategoryResponse(categoryRes)));
   } catch (error) {
     console.log(error);
     return res.status(500).send(formResponse(null, "Internal error occured"));
@@ -43,10 +53,12 @@ const updateCategory = async (req, res) => {
     if (!validatedReq.isEmpty())
       return res.status(400).send(formResponse(null, validatedReq.array()));
 
-    const categoryRes = await updateCategoryById(
-      req.params.categoryId,
-      req.body
-    );
+    const categoryRes = await updateCategoryById(req.params.categoryId, {
+      categoryName: req.body.categoryName,
+      desc: req.body.desc,
+      colorHexCode: req.body.colorHexCode,
+    });
+
     if (categoryRes === null)
       return res
         .status(404)
@@ -56,6 +68,7 @@ const updateCategory = async (req, res) => {
             `Category with id ${req.params.categoryId} not found.`
           )
         );
+
     return res
       .status(200)
       .send(formResponse("Updated category details successfully."));
@@ -113,6 +126,9 @@ const deleteCategoryById = async (req, res) => {
           )
         );
 
+    const categoryIdLst = [];
+    categoryIdLst.push(req.params.categoryId);
+    await deleteUserTasks(categoryIdLst);
     await removeCategoryById(req.params.categoryId);
     return res
       .status(200)
