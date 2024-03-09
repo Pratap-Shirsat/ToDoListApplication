@@ -1,5 +1,6 @@
 const { validateAuthToken } = require("../../helpers/authHelper");
 const { formResponse } = require("../../helpers/responseHelper");
+const logger = require("../../helpers/logger");
 
 const authorizeUser = async (req, res, next) => {
   try {
@@ -24,7 +25,7 @@ const authorizeUser = async (req, res, next) => {
         .send(formResponse(null, "Authorization token is required!"));
     }
   } catch (error) {
-    console.log(error);
+    logger.error(`authorizeUser - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured"));

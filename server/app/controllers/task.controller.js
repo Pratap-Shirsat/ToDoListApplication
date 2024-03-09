@@ -9,6 +9,7 @@ const {
   fetchFilteredTasks,
 } = require("../services/task.service");
 const { findCategoryById } = require("../services/category.service");
+const logger = require("../helpers/logger");
 
 const addTask = async (req, res) => {
   try {
@@ -47,7 +48,7 @@ const addTask = async (req, res) => {
       .status(201)
       .send(formResponse(`Created task successfully with id ${serviceRes.id}`));
   } catch (error) {
-    console.log(error);
+    logger.error(`addTask - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
@@ -59,7 +60,7 @@ const getAllTasks = async (req, res) => {
     const tasksRes = await findAllTasksOfUser(req.user.userId);
     return res.status(200).send(formResponse(generateTaskResponse(tasksRes)));
   } catch (error) {
-    console.log(error);
+    logger.error(`getAllTasks - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
@@ -85,7 +86,7 @@ const findTaskById = async (req, res) => {
       .status(200)
       .send(formResponse(generateTaskResponse(taskList)[0]));
   } catch (error) {
-    console.log(error);
+    logger.error(`findTaskById - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
@@ -118,7 +119,7 @@ const updateTask = async (req, res) => {
         );
     return res.status(200).send(formResponse("Updated task successfully"));
   } catch (error) {
-    console.log(error);
+    logger.error(`updateTask - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
@@ -140,7 +141,7 @@ const removeTask = async (req, res) => {
         );
     return res.status(200).send(formResponse("Deleted task successfully"));
   } catch (error) {
-    console.log(error);
+    logger.error(`removeTask - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
@@ -179,7 +180,7 @@ const getFilteredTasks = async (req, res) => {
     const taskRes = await fetchFilteredTasks(filterObj);
     return res.status(200).send(formResponse(generateTaskResponse(taskRes)));
   } catch (error) {
-    console.log(error);
+    logger.error(`getFilteredTasks - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
@@ -225,7 +226,7 @@ const updateTaskStatus = async (req, res) => {
       .status(200)
       .send(formResponse("Updated task status successfully"));
   } catch (error) {
-    console.log(error);
+    logger.error(`updateTaskStatus - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "some internal error occured"));
@@ -256,7 +257,7 @@ const updateTaskCategory = async (req, res) => {
       .status(200)
       .send(formResponse("Updated task status successfully"));
   } catch (error) {
-    console.log(error);
+    logger.error(`updateTaskCategory - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "some internal error occured"));

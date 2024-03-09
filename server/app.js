@@ -7,6 +7,7 @@ const {
   userRoutes,
   authRoutes,
 } = require("./app/routes/index");
+const logger = require("./app/helpers/logger");
 const dbConnection = require("./app/db/db.config");
 
 dbConnection();
@@ -24,5 +25,5 @@ app.use(unKnownRoutes);
 
 const nodePort = process.env.NODE_PORT || 4545;
 const server = app.listen(nodePort, () => {
-  console.log(`ToDoList service started on Port ${nodePort}.`);
+  logger.info(`ToDoList service started on Port ${nodePort}.`);
 });

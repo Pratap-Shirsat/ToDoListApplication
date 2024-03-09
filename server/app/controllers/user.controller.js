@@ -12,6 +12,7 @@ const {
   deleteCategoriesOfUser,
 } = require("../services/category.service");
 const { deleteUserTasks } = require("../services/task.service");
+const logger = require("../helpers/logger");
 
 const registerUser = async (req, res) => {
   try {
@@ -36,7 +37,7 @@ const registerUser = async (req, res) => {
           )
         );
     }
-    console.log(error);
+    logger.error(`registerUser - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "An internal error occured."));
@@ -56,7 +57,7 @@ const getUserDetails = async (req, res) => {
     };
     return res.status(200).send(formResponse(userDetails));
   } catch (error) {
-    console.log(error);
+    logger.error(`getUserDetails - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "An internal error occured."));
@@ -98,7 +99,7 @@ const updateUserData = async (req, res) => {
           )
         );
     }
-    console.log(error);
+    logger.error(`updateUserData - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "An internal error occured."));
@@ -123,7 +124,7 @@ const resetPassword = async (req, res) => {
       .status(200)
       .send(formResponse("Password has been reset successfully"));
   } catch (error) {
-    console.log(error);
+    logger.error(`resetPassword - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "An internal error occured."));
@@ -146,7 +147,7 @@ const deleteUser = async (req, res) => {
       .status(200)
       .send(formResponse("User has been deleted successfully"));
   } catch (error) {
-    console.log(error);
+    logger.error(`deleteUser - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "An internal error occured."));

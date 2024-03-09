@@ -8,6 +8,7 @@ const {
   removeCategoryById,
 } = require("../services/category.service");
 const { deleteUserTasks } = require("../services/task.service");
+const logger = require("../helpers/logger");
 
 const addCategory = async (req, res) => {
   try {
@@ -30,7 +31,7 @@ const addCategory = async (req, res) => {
         formResponse(`Created category successfully with id ${serviceRes.id}`)
       );
   } catch (error) {
-    console.log(error);
+    logger.error(`addCategory - ${error}`);
     return res.status(500).send(formResponse(null, "Internal error occured"));
   }
 };
@@ -42,7 +43,7 @@ const getCategories = async (req, res) => {
       .status(200)
       .send(formResponse(formCategoryResponse(categoryRes)));
   } catch (error) {
-    console.log(error);
+    logger.error(`getCategories - ${error}`);
     return res.status(500).send(formResponse(null, "Internal error occured"));
   }
 };
@@ -73,7 +74,7 @@ const updateCategory = async (req, res) => {
       .status(200)
       .send(formResponse("Updated category details successfully."));
   } catch (error) {
-    console.log(error);
+    logger.error(`updateCategory - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
@@ -102,7 +103,7 @@ const fetchCategoryById = async (req, res) => {
       .status(200)
       .send(formResponse(formCategoryResponse(categoryList)[0]));
   } catch (error) {
-    console.log(error);
+    logger.error(`fetchCategoryById - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));
@@ -138,7 +139,7 @@ const deleteCategoryById = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
+    logger.error(`deleteCategoryById - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured!"));

@@ -3,6 +3,7 @@ const { formResponse } = require("../helpers/responseHelper");
 const { validationResult } = require("express-validator");
 const { compare } = require("bcrypt");
 const { generateAuthToken } = require("../helpers/authHelper");
+const logger = require("../helpers/logger");
 
 const userLogin = async (req, res) => {
   try {
@@ -22,7 +23,7 @@ const userLogin = async (req, res) => {
     const token = await generateAuthToken({ userId: user._id });
     return res.status(200).send(formResponse({ token }));
   } catch (error) {
-    console.log(error);
+    logger.error(`userLogin - ${error}`);
     return res
       .status(500)
       .send(formResponse(null, "Some internal error occured"));
