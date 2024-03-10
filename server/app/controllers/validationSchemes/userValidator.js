@@ -32,7 +32,7 @@ const validateUpdateData = [
 ];
 
 const validateLoginData = [
-  body("username")
+  body("password")
     .isLength({ min: 8, max: 15 })
     .withMessage("Password must be between 8 to 15 characters long only."),
   body("username")

@@ -23,9 +23,7 @@ const registerUser = async (req, res) => {
     const salt = await genSalt(10);
     req.body.hashedPassword = await hash(req.body.password, salt);
     await createUser(req.body);
-    return res
-      .status(201)
-      .send(formResponse(null, "Registerd user successfuly"));
+    return res.status(201).send(formResponse("Registerd user successfuly"));
   } catch (error) {
     if (error.code === 11000) {
       return res
