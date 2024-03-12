@@ -307,6 +307,7 @@ const Task = ({
                   placeholder="Search"
                   aria-label="Search"
                   name="filterString"
+                  style={{ minWidth: "100px" }}
                   value={filterData.filterString}
                   onChange={filterOnChange}
                 />
@@ -353,18 +354,20 @@ const Task = ({
                   <tbody>
                     {tasks.map((task) => (
                       <tr key={task.taskId}>
-                        <th scope="row">
-                          <textarea
-                            className="form-control"
-                            id="taskDesc"
-                            style={{ height: "80px" }}
-                            placeholder="Enter task description here..."
-                            onChange={onChange}
-                            name="taskName"
-                            value={task.taskInfo}
-                            required
-                            disabled
-                          ></textarea>
+                        <th scope="row" className="col-8">
+                          <div className="d-flex">
+                            <textarea
+                              className="form-control flex-grow-1"
+                              id="taskDesc"
+                              style={{ height: "80px" }}
+                              placeholder="Enter task description here..."
+                              onChange={onChange}
+                              name="taskName"
+                              value={task.taskInfo}
+                              required
+                              disabled
+                            ></textarea>
+                          </div>
                         </th>
                         <td>
                           <select value={task.taskStatus} disabled>

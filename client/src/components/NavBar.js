@@ -1,6 +1,8 @@
 import { connect } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 const NavBar = ({ isLoggedIn }) => {
+  const location = useLocation();
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark">
       <div className="container-fluid">
@@ -28,14 +30,22 @@ const NavBar = ({ isLoggedIn }) => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="/">
+              <a
+                className={`nav-link ${
+                  location.pathname === "/" ? "active" : ""
+                }`}
+                aria-current="page"
+                href="/"
+              >
                 Home
               </a>
             </li>
             {isLoggedIn && (
               <li className="nav-item">
                 <a
-                  className="nav-link active"
+                  className={`nav-link ${
+                    location.pathname === "/categories" ? "active" : ""
+                  }`}
                   aria-current="page"
                   href="/categories"
                 >
@@ -46,7 +56,9 @@ const NavBar = ({ isLoggedIn }) => {
             {isLoggedIn && (
               <li className="nav-item">
                 <a
-                  className="nav-link active"
+                  className={`nav-link ${
+                    location.pathname === "/tasks" ? "active" : ""
+                  }`}
                   aria-current="page"
                   href="/tasks"
                 >
@@ -67,7 +79,7 @@ const NavBar = ({ isLoggedIn }) => {
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <a className="dropdown-item" href="/">
+                    <a className="dropdown-item" href="/profile">
                       Update Profile
                     </a>
                   </li>
@@ -87,14 +99,14 @@ const NavBar = ({ isLoggedIn }) => {
                 </ul>
               </li>
             )}
-            {!isLoggedIn && (
-              <li className="nav-item">
-                <a className="nav-link" aria-current="page" href="/login">
-                  Login
-                </a>
-              </li>
-            )}
           </ul>
+          {!isLoggedIn && (
+            <span className="nav-item">
+              <a className="btn btn-outline-success" href="/login">
+                Login
+              </a>
+            </span>
+          )}
         </div>
       </div>
     </nav>

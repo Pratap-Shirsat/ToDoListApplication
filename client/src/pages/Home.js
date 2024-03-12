@@ -1,15 +1,11 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { fetchUserCategories } from "../store/actions/categoryActions";
 import { fetchUserTasks } from "../store/actions/taskActions";
 
 const Home = ({ token, fetchUserCategories, fetchUserTasks }) => {
-  const navigator = useNavigate();
   useEffect(() => {
-    if (token === null) {
-      navigator("/login");
-    } else {
+    if (token !== null) {
       (async () => await fetchUserCategories(token))();
       (async () => await fetchUserTasks(token))();
     }

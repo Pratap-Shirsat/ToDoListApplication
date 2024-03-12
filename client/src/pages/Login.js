@@ -71,6 +71,9 @@ const Login = ({ userLogin }) => {
           <div>
             <a href="/register">Want to Register?</a>
           </div>
+          <div>
+            <a href="/reset-password">Forgot Password?</a>
+          </div>
         </div>
       </div>
     </div>

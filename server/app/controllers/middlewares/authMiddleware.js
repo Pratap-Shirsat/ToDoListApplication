@@ -32,6 +32,37 @@ const authorizeUser = async (req, res, next) => {
   }
 };
 
+const authResetToken = async (req, res, next) => {
+  try {
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.split(" ")[0] === "Bearer"
+    ) {
+      const validatedUser = await validateAuthToken(
+        req.headers.authorization.split(" ")[1]
+      );
+      if (validatedUser.isValid) {
+        req.resetUser = validatedUser.data;
+        return next();
+      } else {
+        return res
+          .status(403)
+          .send(formResponse(null, "Reset authorization token is expired!"));
+      }
+    } else {
+      return res
+        .status(403)
+        .send(formResponse(null, "Reset authorization token is required!"));
+    }
+  } catch (error) {
+    logger.error(`authResetToken - ${error}`);
+    return res
+      .status(500)
+      .send(formResponse(null, "Some internal error occured"));
+  }
+};
+
 module.exports = {
   authorizeUser,
+  authResetToken,
 };

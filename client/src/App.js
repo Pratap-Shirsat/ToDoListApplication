@@ -12,22 +12,24 @@ import { connect } from "react-redux";
 import DeleteAccount from "./pages/DeleteAccount";
 import Category from "./pages/Category";
 import Task from "./pages/Task";
+import UserProfile from "./pages/UserProfile";
+import ResetPassword from "./pages/ResetPassword";
 
 function App({ isLoading, errorMsg }) {
   const { isShowAlert } = useToDo();
   return (
     <div className="App">
-      <NavBar />
-      {isLoading && (
-        <>
-          <br />
-          <br />
-          <br />
-          <Loader />
-        </>
-      )}
-      {isShowAlert && <ErrorAlert errorMsg={errorMsg} />}
       <Router>
+        <NavBar />
+        {isShowAlert && <ErrorAlert errorMsg={errorMsg} />}
+        {isLoading && (
+          <>
+            <br />
+            <br />
+            <br />
+            <Loader />
+          </>
+        )}
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/register" element={<Register />} />
@@ -36,6 +38,8 @@ function App({ isLoading, errorMsg }) {
           <Route exact path="/delete-account" element={<DeleteAccount />} />
           <Route exact path="/categories" element={<Category />} />
           <Route exact path="/tasks" element={<Task />} />
+          <Route exact path="/profile" element={<UserProfile />} />
+          <Route exact path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </Router>
     </div>
