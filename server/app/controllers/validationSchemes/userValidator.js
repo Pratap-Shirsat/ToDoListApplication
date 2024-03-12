@@ -19,6 +19,10 @@ const validatePassword = [
     .withMessage("Password must be between 8 to 15 characters long only."),
 ];
 
+const validateEmail = [
+  body("userEmail").isEmail().withMessage("Not a valid email address"),
+];
+
 const validateUpdateData = [
   body("name")
     .optional()
@@ -45,4 +49,5 @@ module.exports = {
   validatePassword,
   validateUpdateData,
   validateLoginData,
+  validateEmail,
 };

@@ -15,6 +15,8 @@ const findUserByEmail = async (email) => userModel.findOne({ email }).exec();
 const findUserByUsername = async (username) =>
   userModel.findOne({ username }).exec();
 
+const fetchUserByEmail = async (email) => userModel.findOne({ email }).exec();
+
 module.exports = {
   createUser,
   fetchUserById,
@@ -22,4 +24,5 @@ module.exports = {
   deleteUserById,
   findUserByEmail,
   findUserByUsername,
+  fetchUserByEmail,
 };

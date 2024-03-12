@@ -7,6 +7,13 @@ const generateAuthToken = async (userData) => {
   return token;
 };
 
+const generateResetAuthToken = async (userData) => {
+  const token = await sign(userData, process.env.SECRET_KEY, {
+    expiresIn: "30m",
+  });
+  return token;
+};
+
 const validateAuthToken = async (token) => {
   try {
     const userData = await verify(token, process.env.SECRET_KEY);
@@ -16,4 +23,8 @@ const validateAuthToken = async (token) => {
   }
 };
 
-module.exports = { generateAuthToken, validateAuthToken };
+module.exports = {
+  generateAuthToken,
+  validateAuthToken,
+  generateResetAuthToken,
+};

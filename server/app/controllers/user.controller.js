@@ -3,6 +3,7 @@ const {
   fetchUserById,
   updateUser,
   deleteUserById,
+  fetchUserByEmail,
 } = require("../services/user.service");
 const { formResponse } = require("../helpers/responseHelper");
 const { validationResult } = require("express-validator");
@@ -13,6 +14,8 @@ const {
 } = require("../services/category.service");
 const { deleteUserTasks } = require("../services/task.service");
 const logger = require("../helpers/logger");
+const { generateResetAuthToken } = require("../helpers/authHelper");
+const { sendResetTokenEmail } = require("../helpers/emailSender");
 
 const registerUser = async (req, res) => {
   try {
@@ -110,14 +113,14 @@ const resetPassword = async (req, res) => {
     if (!validatedReq.isEmpty())
       return res.status(400).send(formResponse(null, validatedReq.array()));
 
-    const user = await fetchUserById(req.user.userId);
+    const user = await fetchUserById(req.resetUser.resetUser_Id);
     if (user === null)
       return res.status(404).send(formResponse(null, "User does not exists."));
 
     const salt = await genSalt(10);
-    const hashedPassword = hash(req.body.password, salt);
+    const hashedPassword = await hash(req.body.password, salt);
 
-    await updateUser(req.user.userId, { hashedPassword });
+    await updateUser(user._id, { hashedPassword });
     return res
       .status(200)
       .send(formResponse("Password has been reset successfully"));
@@ -152,10 +155,39 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const generateResetToken = async (req, res) => {
+  try {
+    const validatedReq = validationResult(req);
+    if (!validatedReq.isEmpty())
+      return res.status(400).send(formResponse(null, validatedReq.array()));
+
+    const user = await fetchUserByEmail(req.body.userEmail);
+    if (user === null)
+      return res.status(404).send(formResponse(null, "Invalid email address!"));
+    const resetToken = await generateResetAuthToken({ resetUser_Id: user._id });
+
+    sendResetTokenEmail({ name: user.name, email: user.email, resetToken });
+
+    return res
+      .status(200)
+      .send(
+        formResponse(
+          "A reset auth token has been sent to the registered email address!"
+        )
+      );
+  } catch (error) {
+    logger.error(`generateResetToken - ${error}`);
+    return res
+      .status(500)
+      .send(formResponse(null, "An internal error occured."));
+  }
+};
+
 module.exports = {
   registerUser,
   getUserDetails,
   updateUserData,
   deleteUser,
   resetPassword,
+  generateResetToken,
 };
