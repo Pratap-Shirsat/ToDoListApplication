@@ -1,5 +1,19 @@
-import React from "react";
-const Home = () => {
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchUserCategories } from "../store/actions/categoryActions";
+import { fetchUserTasks } from "../store/actions/taskActions";
+
+const Home = ({ token, fetchUserCategories, fetchUserTasks }) => {
+  const navigator = useNavigate();
+  useEffect(() => {
+    if (token === null) {
+      navigator("/login");
+    } else {
+      (async () => await fetchUserCategories(token))();
+      (async () => await fetchUserTasks(token))();
+    }
+  }, []);
   return (
     <>
       <div className="container p-5">
@@ -13,4 +27,11 @@ const Home = () => {
   );
 };
 
-export default Home;
+const mapStateToProps = (state) => ({
+  token: state.app.authToken,
+});
+const mapDispatchToProps = {
+  fetchUserCategories,
+  fetchUserTasks,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

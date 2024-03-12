@@ -10,6 +10,8 @@ import { useToDo } from "./context/toDoContext";
 import ErrorAlert from "./components/ErrorAlert";
 import { connect } from "react-redux";
 import DeleteAccount from "./pages/DeleteAccount";
+import Category from "./pages/Category";
+import Task from "./pages/Task";
 
 function App({ isLoading, errorMsg }) {
   const { isShowAlert } = useToDo();
@@ -32,6 +34,8 @@ function App({ isLoading, errorMsg }) {
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/logout" element={<Logout />} />
           <Route exact path="/delete-account" element={<DeleteAccount />} />
+          <Route exact path="/categories" element={<Category />} />
+          <Route exact path="/tasks" element={<Task />} />
         </Routes>
       </Router>
     </div>

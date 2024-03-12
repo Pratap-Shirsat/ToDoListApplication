@@ -10,7 +10,7 @@ const Logout = ({ removeAuthToken }) => {
     removeAuthToken();
     alert("Logged out successfully. Redirecting to homepage...");
     navigator("/");
-  }, [removeAuthToken, navigator]);
+  }, []);
 
   return (
     <>

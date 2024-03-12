@@ -6,8 +6,6 @@ export const SET_ERROR_MESSAGE = "SET_ERROR_MESSAGE";
 export const SAVE_AUTH_TOKEN = "SAVE_AUTH_TOKEN";
 export const REMOVE_AUTH_TOKEN = "REMOVE_AUTH_TOKEN";
 
-// user action types
 
-// category action types
-
-// task action types
+export const UPDATE_CATEGORY_LIST = "UPDATE_CATEGORY_LIST";
+export const UPDATE_TASK_LIST = "UPDATE_TASK_LIST";

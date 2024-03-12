@@ -33,6 +33,28 @@ const NavBar = ({ isLoggedIn }) => {
               </a>
             </li>
             {isLoggedIn && (
+              <li className="nav-item">
+                <a
+                  className="nav-link active"
+                  aria-current="page"
+                  href="/categories"
+                >
+                  Category
+                </a>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li className="nav-item">
+                <a
+                  className="nav-link active"
+                  aria-current="page"
+                  href="/tasks"
+                >
+                  Task
+                </a>
+              </li>
+            )}
+            {isLoggedIn && (
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -73,19 +95,6 @@ const NavBar = ({ isLoggedIn }) => {
               </li>
             )}
           </ul>
-          {isLoggedIn && (
-            <form className="d-flex" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
-          )}
         </div>
       </div>
     </nav>
