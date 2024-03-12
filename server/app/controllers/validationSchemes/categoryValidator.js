@@ -11,10 +11,6 @@ const categoryDataValidate = [
     .withMessage(
       "Description length should be between 1 to 250 characters long."
     ),
-  body("colorHexCode")
-    .optional()
-    .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "i")
-    .withMessage("Invalid hex code format for color"),
 ];
 
 const categoryIdValidate = param("categoryId")
@@ -32,9 +28,6 @@ const categoryUpdateDataValidate = [
     .withMessage(
       "Description length should be between 1 to 250 characters long."
     ),
-  body("colorHexCode")
-    .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "i")
-    .withMessage("Invalid hex code format for color"),
 ];
 
 module.exports = {

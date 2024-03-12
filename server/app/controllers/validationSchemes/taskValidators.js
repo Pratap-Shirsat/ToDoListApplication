@@ -25,22 +25,13 @@ const validateTaskId = param("taskId")
 const validateFilterData = [
   query("categoryId").optional().isMongoId().withMessage("Invalid categoryId"),
   query("taskStatus").optional().custom(validateTaskStatus),
-  query("search")
+  query("searchString")
     .optional()
     .notEmpty()
     .trim()
     .isLength({ min: 1, max: 15 })
     .withMessage("Search string should be between 1 to 15 characters only"),
-  query("beforeDate").optional().toDate(),
-  query("onDate").optional().toDate(),
-  query("afterDate").optional().toDate(),
 ];
-
-const taskStatusValidate = body("taskStatus").custom(validateTaskStatus);
-
-const categoryValidate = body("categoryId")
-  .isMongoId()
-  .withMessage("Invalid categoryId");
 
 const taskUpdateDataValidate = [
   body("taskInfo")
@@ -48,13 +39,13 @@ const taskUpdateDataValidate = [
     .isLength({ min: 1, max: 800 })
     .withMessage("Task information should be of length 1 to 800 characters."),
   body("dueDate").toDate(),
+  body("categoryId").isMongoId().withMessage("Invalid categoryId"),
+  body("taskStatus").custom(validateTaskStatus),
 ];
 
 module.exports = {
   taskDataValidate,
   validateTaskId,
   validateFilterData,
-  taskStatusValidate,
-  categoryValidate,
   taskUpdateDataValidate,
 };

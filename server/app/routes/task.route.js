@@ -3,8 +3,6 @@ const {
   taskDataValidate,
   validateTaskId,
   validateFilterData,
-  taskStatusValidate,
-  categoryValidate,
   taskUpdateDataValidate,
 } = require("../controllers/validationSchemes/taskValidators");
 const {
@@ -14,8 +12,6 @@ const {
   updateTask,
   removeTask,
   getFilteredTasks,
-  updateTaskStatus,
-  updateTaskCategory,
 } = require("../controllers/task.controller");
 const { authorizeUser } = require("../controllers/middlewares/authMiddleware");
 
@@ -31,20 +27,6 @@ const taskRoutes = () => {
     getFilteredTasks
   );
   taskRouter.get("/:taskId", authorizeUser, validateTaskId, findTaskById);
-  taskRouter.put(
-    "/status/:taskId",
-    authorizeUser,
-    validateTaskId,
-    taskStatusValidate,
-    updateTaskStatus
-  );
-  taskRouter.put(
-    "/category/:taskId",
-    authorizeUser,
-    validateTaskId,
-    categoryValidate,
-    updateTaskCategory
-  );
   taskRouter.put(
     "/:taskId",
     authorizeUser,

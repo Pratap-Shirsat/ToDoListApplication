@@ -7,7 +7,6 @@ const taskModel = new Schema({
     enum: ["Pending", "InProgress", "Completed"],
     default: "Pending",
   },
-  dueDate: { type: Date, default: () => new Date().setHours(23, 59, 59, 999) },
   category: { type: Schema.Types.ObjectId, ref: "Category" },
 });
 

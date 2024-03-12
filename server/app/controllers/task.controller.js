@@ -32,17 +32,6 @@ const addTask = async (req, res) => {
       category: req.body.categoryId,
       taskInfo: req.body.taskInfo,
     };
-    if (req.body.dueDate === null) {
-      return res.status(400).send(formResponse(null, "Due date is invalid"));
-    }
-    if (req.body.dueDate !== null) {
-      if (req.body.dueDate < new Date())
-        return res
-          .status(400)
-          .send(formResponse(null, "Due date should be of future"));
-
-      taskData.dueDate = req.body.dueDate;
-    }
     const serviceRes = await insertTask(taskData);
     return res
       .status(201)
@@ -98,25 +87,30 @@ const updateTask = async (req, res) => {
     const validatedReq = validationResult(req);
     if (!validatedReq.isEmpty())
       return res.status(400).send(formResponse(null, validatedReq.array()));
-    if (req.body.dueDate === null) {
-      return res.status(400).send(formResponse(null, "Due date is invalid"));
-    }
-    if (req.body.dueDate !== null) {
-      if (req.body.dueDate <= new Date())
-        return res
-          .status(400)
-          .send(formResponse(null, "Due date should be of future"));
-    }
-    const taskRes = await updateTaskById(req.params.taskId, {
+
+    let taskRes = await fetchTaskById(req.params.taskId);
+    const updateTaskData = {
       taskInfo: req.body.taskInfo,
-      dueDate: req.body.dueDate,
-    });
+    };
     if (taskRes === null)
       return res
         .status(404)
         .send(
           formResponse(null, `Task with id ${req.params.taskId} not found!`)
         );
+
+    if (taskRes.taskStatus !== req.body.taskStatus) {
+      updateTaskData.taskStatus = req.body.taskStatus;
+    }
+
+    if (taskRes.category._id !== req.body.categoryId) {
+      const category = await findCategoryById(req.body.categoryId);
+      if (category === null)
+        return res.status(404).send(formResponse(null, "Category not found!"));
+      updateTaskData.category = req.body.categoryId;
+    }
+
+    await updateTaskById(req.params.taskId, updateTaskData);
     return res.status(200).send(formResponse("Updated task successfully"));
   } catch (error) {
     logger.error(`updateTask - ${error}`);
@@ -160,22 +154,6 @@ const getFilteredTasks = async (req, res) => {
     if (req.query.taskStatus) {
       filterObj.taskStatus = req.query.taskStatus;
     }
-    if (
-      req.query.beforeDate === null ||
-      req.query.onDate === null ||
-      req.query.afterDate === null
-    ) {
-      return res.status(400).send(formResponse(null, "Invalid date format"));
-    }
-    if (req.query.beforeDate) {
-      filterObj.beforeDate = req.query.beforeDate;
-    }
-    if (req.query.afterDate) {
-      filterObj.afterDate = req.query.afterDate;
-    }
-    if (req.query.onDate) {
-      filterObj.onDate = req.query.onDate;
-    }
 
     const taskRes = await fetchFilteredTasks(filterObj);
     return res.status(200).send(formResponse(generateTaskResponse(taskRes)));
@@ -198,70 +176,12 @@ const generateTaskResponse = (tasks) => {
       categoryInfo: {
         categoryId: r.category._id,
         categoryName: r.category.categoryName ?? r.taskCategory.categoryName,
-        colorHexCode: r.category.colorHexCode ?? r.taskCategory.colorHexCode,
+        colorCode: r.category.colorCode ?? r.taskCategory.colorCode,
         desc: r.category.desc ?? r.taskCategory.desc,
       },
     })
   );
   return taskList;
-};
-
-const updateTaskStatus = async (req, res) => {
-  try {
-    const validatedReq = validationResult(req);
-    if (!validatedReq.isEmpty())
-      return res.status(400).send(formResponse(null, validatedReq.array()));
-
-    const taskRes = await updateTaskById(req.params.taskId, {
-      taskStatus: req.body.taskStatus,
-    });
-
-    if (taskRes === null)
-      return res
-        .status(404)
-        .send(
-          formResponse(null, `Task with id ${req.params.taskId} not found!`)
-        );
-    return res
-      .status(200)
-      .send(formResponse("Updated task status successfully"));
-  } catch (error) {
-    logger.error(`updateTaskStatus - ${error}`);
-    return res
-      .status(500)
-      .send(formResponse(null, "some internal error occured"));
-  }
-};
-
-const updateTaskCategory = async (req, res) => {
-  try {
-    const validatedReq = validationResult(req);
-    if (!validatedReq.isEmpty())
-      return res.status(400).send(formResponse(null, validatedReq.array()));
-
-    const category = await findCategoryById(req.body.categoryId);
-    if (category === null)
-      return res.status(404).send(formResponse(null, "Category not found!"));
-
-    const taskRes = await updateTaskById(req.params.taskId, {
-      category: req.body.categoryId,
-    });
-
-    if (taskRes === null)
-      return res
-        .status(404)
-        .send(
-          formResponse(null, `Task with id ${req.params.taskId} not found!`)
-        );
-    return res
-      .status(200)
-      .send(formResponse("Updated task status successfully"));
-  } catch (error) {
-    logger.error(`updateTaskCategory - ${error}`);
-    return res
-      .status(500)
-      .send(formResponse(null, "some internal error occured"));
-  }
 };
 
 module.exports = {
@@ -271,6 +191,4 @@ module.exports = {
   updateTask,
   removeTask,
   getFilteredTasks,
-  updateTaskStatus,
-  updateTaskCategory,
 };

@@ -21,8 +21,8 @@ const addCategory = async (req, res) => {
       categoryName: req.body.categoryName,
       desc: req.body.desc,
     };
-    if (req.body.colorHexCode)
-      categoryData.colorHexCode = req.body.colorHexCode;
+    if (req.body.colorCode)
+      categoryData.colorCode = req.body.colorCode;
 
     const serviceRes = await insertCategory(categoryData);
     return res
@@ -57,7 +57,7 @@ const updateCategory = async (req, res) => {
     const categoryRes = await updateCategoryById(req.params.categoryId, {
       categoryName: req.body.categoryName,
       desc: req.body.desc,
-      colorHexCode: req.body.colorHexCode,
+      colorCode: req.body.colorCode,
     });
 
     if (categoryRes === null)
@@ -152,7 +152,7 @@ const formCategoryResponse = (categories) => {
     categoryList.push({
       categoryId: r._id,
       categoryName: r.categoryName,
-      colorHexCode: r.colorHexCode,
+      colorCode: r.colorCode,
       desc: r.desc,
     })
   );

@@ -22,7 +22,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"categoryName\":\"New Tasks\",\r\n    \"desc\":\"Tasks which are of New Day\",\r\n    \"colorHexCode\":\"#FFFF00\"\r\n}",
+							"raw": "{\r\n    \"categoryName\":\"New Tasks\",\r\n    \"desc\":\"Tasks which are of New Day\",\r\n    \"colorCode\":\"bg-primary\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -76,7 +76,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"categoryName\":\"Daily Tasks\",\r\n    \"desc\":\"Tasks which are done on daily routine basis\",\r\n    \"colorHexCode\":\"#FFFF00\"\r\n}",
+							"raw": "{\r\n    \"categoryName\":\"Daily Tasks\",\r\n    \"desc\":\"Tasks which are done on daily routine basis\",\r\n    \"colorCode\":\"#FFFF00\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -134,7 +134,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5000/task/filter?beforeDate=2024-03-15",
+							"raw": "http://localhost:5000/task/filter?searchString=goa",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -151,28 +151,13 @@
 									"disabled": true
 								},
 								{
-									"key": "onDate",
-									"value": "2024-1-13",
-									"disabled": true
-								},
-								{
-									"key": "beforeDate",
-									"value": "2024-03-15"
-								},
-								{
-									"key": "afterDate",
-									"value": "2024-03-10",
-									"disabled": true
-								},
-								{
 									"key": "categoryId",
 									"value": "65e9d76b872be9fe6ae025b9",
 									"disabled": true
 								},
 								{
 									"key": "searchString",
-									"value": "goa",
-									"disabled": true
+									"value": "goa"
 								}
 							]
 						}
@@ -207,7 +192,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"taskInfo\":\"Wash car and fill up the fuel tank\",\r\n    \"categoryId\":\"65ec1e4fa2bbdf623c18fd6c\"//,\r\n    //\"dueDate\":\"2024-3-8\"\r\n}",
+							"raw": "{\r\n    \"taskInfo\":\"Wash car and fill up the fuel tank\",\r\n    \"categoryId\":\"65ec1e4fa2bbdf623c18fd6c\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -231,7 +216,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"taskInfo\":\"Need to attend wedding at old Goa,Need to attend wedding of Kiran at old goa on 13th March 11AM at old Heritage hall.\",\r\n    \"dueDate\": \"Thu, 09 Mar 2024 11:59:39 GMT\"\r\n}",
+							"raw": "{\r\n    \"taskInfo\":\"Need to attend wedding at old Goa,Need to attend wedding of Kiran at old goa on 13th March 11AM at old Heritage hall.\",\r\n    \"taskStatus\":\"Pending\",\r\n    \"categoryId\":\"65ec1e4fa2bbdf623c18fd6c\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -239,54 +224,6 @@
 							}
 						},
 						"url": "http://localhost:5000/task/65ec48350d5ebc1fd3341be3"
-					},
-					"response": []
-				},
-				{
-					"name": "Update Task Progress",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{jwtToken}}"
-							}
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"taskStatus\": \"Completed\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "http://localhost:5000/task/status/65ec48310d5ebc1fd3341be0"
-					},
-					"response": []
-				},
-				{
-					"name": "Update Task Category",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{jwtToken}}"
-							}
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"categoryId\": \"65ec1e6fa2bbdf623c18fd6e\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "http://localhost:5000/task/category/65ec48360d5ebc1fd3341be6"
 					},
 					"response": []
 				},
