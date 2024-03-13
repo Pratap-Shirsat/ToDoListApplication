@@ -32,6 +32,8 @@ const Task = ({
     filterStatus: "Pending",
     filterCategory: "",
     filterString: "",
+    pageSize: 5,
+    currentPage: 1,
   });
   const { updateAlert } = useToDo();
 
@@ -134,6 +136,13 @@ const Task = ({
       updateAlert(true);
       setTimeout(() => updateAlert(false), 5000);
     }
+    setFilterData({
+      ...filterData,
+      filterStatus: "Pending",
+      filterString: "",
+      pageSize: 5,
+      currentPage: 1,
+    });
   };
 
   const filterTaskBySearchString = () => {
@@ -148,6 +157,13 @@ const Task = ({
       updateAlert(true);
       setTimeout(() => updateAlert(false), 5000);
     }
+    setFilterData({
+      ...filterData,
+      filterCategory: "",
+      filterStatus: "Pending",
+      pageSize: 5,
+      currentPage: 1,
+    });
   };
 
   const filterTasksByStatus = () => {
@@ -159,6 +175,13 @@ const Task = ({
       updateAlert(true);
       setTimeout(() => updateAlert(false), 5000);
     }
+    setFilterData({
+      ...filterData,
+      filterCategory: "",
+      filterString: "",
+      pageSize: 5,
+      currentPage: 1,
+    });
   };
 
   const resetFilter = () => {
@@ -166,6 +189,8 @@ const Task = ({
       filterStatus: "Pending",
       filterCategory: "",
       filterString: "",
+      pageSize: 5,
+      currentPage: 1,
     });
     const serviceRes = fetchUserTasks(token);
     if (!serviceRes) {
@@ -173,6 +198,26 @@ const Task = ({
       setTimeout(() => updateAlert(false), 5000);
     }
   };
+
+  const doPageChange = (type = "", pageNo = 1) => {
+    switch (type) {
+      case "INC":
+        setFilterData({
+          ...filterData,
+          currentPage: filterData.currentPage + 1,
+        });
+        break;
+      case "DEC":
+        setFilterData({
+          ...filterData,
+          currentPage: filterData.currentPage - 1,
+        });
+        break;
+      default:
+        setFilterData({ ...filterData, currentPage: pageNo });
+    }
+  };
+
   return (
     <>
       {categories.length > 0 && (
@@ -312,19 +357,19 @@ const Task = ({
                   onChange={filterOnChange}
                 />
                 <button
-                  className="btn btn-outline-secondary"
                   type="button"
-                  onClick={filterTaskBySearchString}
+                  className="btn btn-outline-secondary"
+                  onClick={resetFilter}
                 >
-                  Search
+                  Reset
                 </button>
               </form>
               <button
-                type="button"
                 className="btn btn-outline-secondary my-1"
-                onClick={resetFilter}
+                type="button"
+                onClick={filterTaskBySearchString}
               >
-                Reset
+                Search
               </button>
             </div>
           </div>
@@ -352,60 +397,125 @@ const Task = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {tasks.map((task) => (
-                      <tr key={task.taskId}>
-                        <th scope="row" className="col-8">
-                          <div className="d-flex">
-                            <textarea
-                              className="form-control flex-grow-1"
-                              id="taskDesc"
-                              style={{ height: "80px" }}
-                              placeholder="Enter task description here..."
-                              onChange={onChange}
-                              name="taskName"
-                              value={task.taskInfo}
-                              required
-                              disabled
-                            ></textarea>
-                          </div>
-                        </th>
-                        <td>
-                          <select value={task.taskStatus} disabled>
-                            <option value="Pending">Pending</option>
-                            <option value="InProgress">InProgress</option>
-                            <option value="Completed">Completed</option>
-                          </select>
-                        </td>
-                        <td id={task.categoryInfo.categoryId}>
-                          <span
-                            className={`badge rounded-pill ${task.categoryInfo.colorCode}`}
-                          >
-                            {task.categoryInfo.categoryName}
-                          </span>
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn btn-info my-1"
-                            onClick={() => openEditMode(task)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-danger mx-1"
-                            onClick={() => deleteTaskValidate(task.taskId)}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {tasks
+                      .slice(
+                        (filterData.currentPage - 1) * filterData.pageSize,
+                        filterData.currentPage * filterData.pageSize
+                      )
+                      .map((task) => (
+                        <tr key={task.taskId}>
+                          <th scope="row" className="col-8">
+                            <div className="d-flex">
+                              <textarea
+                                className="form-control flex-grow-1"
+                                id="taskDesc"
+                                style={{ height: "80px" }}
+                                placeholder="Enter task description here..."
+                                onChange={onChange}
+                                name="taskName"
+                                value={task.taskInfo}
+                                required
+                                disabled
+                              ></textarea>
+                            </div>
+                          </th>
+                          <td>
+                            <select value={task.taskStatus} disabled>
+                              <option value="Pending">Pending</option>
+                              <option value="InProgress">InProgress</option>
+                              <option value="Completed">Completed</option>
+                            </select>
+                          </td>
+                          <td id={task.categoryInfo.categoryId}>
+                            <span
+                              className={`badge rounded-pill ${task.categoryInfo.colorCode}`}
+                            >
+                              {task.categoryInfo.categoryName}
+                            </span>
+                          </td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-info my-1"
+                              onClick={() => openEditMode(task)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-danger mx-1"
+                              onClick={() => deleteTaskValidate(task.taskId)}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
             )}
           </div>
+          {tasks.length > filterData.pageSize && (
+            <div
+              className="container p-2 mx-1 my-1"
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-evenly",
+                maxHeight: "70vh",
+                overflowY: "auto",
+              }}
+            >
+              <nav aria-label="...">
+                <ul className="pagination">
+                  <li className={`page-item `}>
+                    <button
+                      type="button"
+                      className={`btn btn-info ${
+                        filterData.currentPage <= 1 ? "disabled" : ""
+                      }`}
+                      onClick={() => doPageChange("DEC")}
+                    >
+                      Previous
+                    </button>
+                  </li>
+                  {Array.from(
+                    { length: Math.ceil(tasks.length / filterData.pageSize) },
+                    (_, index) => (
+                      <li className={`page-item`}>
+                        <button
+                          type="button"
+                          className={`btn ${
+                            filterData.currentPage === index + 1
+                              ? "btn-primary"
+                              : "btn-outline-dark"
+                          }`}
+                          onClick={() => doPageChange("normal", index + 1)}
+                        >
+                          {index + 1}
+                        </button>
+                      </li>
+                    )
+                  )}
+                  <li className={`page-item`}>
+                    <button
+                      type="button"
+                      className={`btn btn-info ${
+                        filterData.currentPage >=
+                        Math.ceil(tasks.length / filterData.pageSize)
+                          ? "disabled"
+                          : ""
+                      }`}
+                      onClick={() => doPageChange("INC")}
+                    >
+                      Next
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          )}
         </div>
       )}
       {token && categories.length === 0 && (
